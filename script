@@ -14,6 +14,7 @@ touch routes/router.js
 touch utils/path.js
 touch package-editor.js
 touch README.md
+touch .gitignore
 
 echo "const express = require('express');
 const router = express.Router();
@@ -56,3 +57,5 @@ fs.writeFileSync(filePath, JSON.stringify(json, null, 2));" >> package-editor.js
 
 node package-editor.js
 rm package-editor.js
+
+echo "node_modules/" >> .gitignore
