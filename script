@@ -1,0 +1,58 @@
+#!/bin/bash
+
+npm init
+npm install --save express
+npm install --save-dev nodemon
+
+mkdir views
+mkdir public
+mkdir routes
+mkdir utils
+
+touch app.js
+touch routes/router.js
+touch utils/path.js
+touch package-editor.js
+touch README.md
+
+echo "const express = require('express');
+const router = express.Router();
+
+const path = require('path');
+const rootDir = require(path.join(.., 'utils', 'path.js'));
+
+router.use(express.static('public'));
+
+router.get('/', (req, res, next) => {
+  res.send('<h1>Hello, world!</h1>');
+});
+
+module.exports = router;" >> routes/router.js
+
+echo "const path = require('path');
+module.exports = path.dirname(process.mainModule.filename);" >> utils/path.js
+
+echo "const express = require('express');
+const app = express();
+
+const path = require('path');
+const rootDir = require(path.join(__dirname, 'utils', 'path.js'));
+
+const routes = require(path.join(rootDir, 'routes', 'router.js'))
+
+app.use(routes);
+
+app.listen(3000);" >> app.js
+
+echo "const fs = require('fs');
+const path = require('path');
+
+const filePath = path.join(__dirname, 'package.json');
+
+const json = JSON.parse(fs.readFileSync(filePath));
+json.scripts.start = \"npx nodemon app.js\";
+
+fs.writeFileSync(filePath, JSON.stringify(json, null, 2));" >> package-editor.js
+
+node package-editor.js
+rm package-editor.js
